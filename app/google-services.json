@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "2868702117",
+    "firebase_url": "https://fafun-17b2c.firebaseio.com",
+    "project_id": "fafun-17b2c",
+    "storage_bucket": "fafun-17b2c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:2868702117:android:cf70aabc6061af14",
+        "android_client_info": {
+          "package_name": "ttc.project.fafun"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "2868702117-529pdjnv7hnhpd0es1po964j0evo721u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDRvXWAb_l8ovl7-2ABTH7Gbitfve5u1QU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

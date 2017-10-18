@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="family_admin_type">0</integer>
+    <integer name="family_regular_type">1</integer>
+    <integer name="point_default_value">0</integer>
+    <integer name="completed_task_default_value">0</integer>
+</resources>
