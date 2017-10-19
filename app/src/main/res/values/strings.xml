@@ -2,10 +2,11 @@
     <string name="app_name">Fafun</string>
 
     <!--Firebase Node-->
-    <string name="user_node">user</string>
-    <string name="family_node">family</string>
-    <string name="family_member">family_member</string>
-    <string name="storage_avatar_link">avatar_link</string>
+    <string name="user_node">users</string>
+    <string name="family_node">families</string>
+    <string name="family_member">family_members</string>
+    <string name="storage_avatar_link">default_avatar</string>
+    <string name="task_node">tasks</string>
 
     <string name="signup_to_login">Already have an account? Log in now!</string>
     <string name="login_to_signup">Don\'t have an account? Register now!</string>
@@ -21,6 +22,7 @@
     <string name="prompt_reenter_password">Re-enter Password</string>
     <string name="prompt_phone">Phone</string>
     <string name="prompt_name">Name</string>
+    <string name="prompt_age">Age</string>
     <string name="action_sign_up">Sign up</string>
     <string name="action_sign_up_short">Sign up</string>
     <string name="action_log_in">Log in</string>
@@ -32,6 +34,7 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+    <string name="role_default">Kepala Keluarga</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

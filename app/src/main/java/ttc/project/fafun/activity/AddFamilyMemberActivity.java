@@ -1,6 +1,7 @@
 package ttc.project.fafun.activity;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
@@ -20,6 +21,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -28,6 +31,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.synnapps.carouselview.CarouselView;
 import com.synnapps.carouselview.ViewListener;
 
@@ -41,6 +45,8 @@ import ttc.project.fafun.model.FamilyMember;
 import ttc.project.fafun.model.User;
 
 public class AddFamilyMemberActivity extends AppCompatActivity {
+    FirebaseAuth mAuth1;
+    FirebaseAuth mAuth2;
     int[] defaultAvatars = {
             R.drawable.boy1,
             R.drawable.boy2,
@@ -104,24 +110,64 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         User user = dataSnapshot.getValue(User.class);
                         final String family_id = user.getFamily_id();
-                        FirebaseAuth.getInstance().createUserWithEmailAndPassword(
+                        FirebaseOptions firebaseOptions = new FirebaseOptions.Builder()
+                                .setDatabaseUrl("https://fafun-17b2c.firebaseio.com/")
+                                .setApiKey("AIzaSyDNSvGCveuY3-FKgKiFksNq_Qgz5dH_j_s")
+                                .setApplicationId("fafun-17b2c").build();
+                        FirebaseApp myApp = FirebaseApp.initializeApp(getApplicationContext(),firebaseOptions,
+                                "AnyAppName");
+
+                        mAuth2 = FirebaseAuth.getInstance(myApp);
+
+                        mAuth2.createUserWithEmailAndPassword(
                                 edt_email.getText().toString(), edt_password.getText().toString())
                                 .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                                     @Override
                                     public void onSuccess(AuthResult authResult) {
                                         setResult(RESULT_OK);
+                                        StorageReference storageReference = FirebaseStorage.getInstance().getReference().child(getString(R.string.storage_avatar_link));
+                                        String avatarPath = null;
+                                        int avatarSelected = carouselSelectAvatar.getCurrentItem();
+                                        switch (avatarSelected){
+                                            case 0:
+                                                avatarPath = storageReference.child("boy1.png").getPath();
+                                                break;
+                                            case 1:
+                                                avatarPath = storageReference.child("boy2.png").getPath();
+                                                break;
+                                            case 2:
+                                                avatarPath = storageReference.child("girl1.png").getPath();
+                                                break;
+                                            case 3:
+                                                avatarPath = storageReference.child("girl2.png").getPath();
+                                                break;
+                                        }
+
                                         FamilyMember familyMember = new FamilyMember(
                                                 authResult.getUser().getUid(),
                                                 family_id,
                                                 edt_name.getText().toString(),
                                                 edt_age.getText().toString(),
-                                                edt_role.getText().toString()
+                                                edt_role.getText().toString(),
+                                                avatarPath,
+                                                getResources().getInteger(R.integer.point_default_value),
+                                                getResources().getInteger(R.integer.point_default_value),
+                                                getResources().getInteger(R.integer.completed_task_default_value)
                                         );
+                                        dbRef.child(getResources().getString(R.string.family_member))
+                                                .child(family_id).child(authResult.getUser().getUid())
+                                                .setValue(familyMember);
                                         dbRef.child(getString(R.string.family_member))
                                                 .child(family_id)
                                                 .child(authResult.getUser().getUid())
                                                 .setValue(familyMember);
-                                        String path = FirebaseStorage.getInstance().getReference().child(getString(R.string.storage_avatar_link)).getPath();
+
+                                        User user = new User(
+                                                edt_email.getText().toString(),
+                                                family_id,
+                                                getResources().getInteger(R.integer.family_regular_type)
+                                        );
+                                        dbRef.child(getString(R.string.user_node)).child(authResult.getUser().getUid()).setValue(user);
 //                                        path+=;
 //                                        User user = new User(
 //                                                edt_name.getText().toString(),
@@ -132,6 +178,7 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
 //                                                getResources().getInteger(R.integer.point_default_value),
 //                                                getResources().getInteger(R.integer.completed_task_default_value)
 //                                        );
+
                                     }
                                 }).addOnFailureListener(new OnFailureListener() {
                             @Override
@@ -190,6 +237,7 @@ public class AddFamilyMemberActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_family_member);
         ButterKnife.bind(this);
 
+        mAuth1 = FirebaseAuth.getInstance();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Tambah Anggota Keluarga");
         carouselSelectAvatar.setPageCount(defaultAvatars.length);

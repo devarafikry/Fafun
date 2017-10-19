@@ -15,9 +15,11 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import devlight.io.library.ntb.NavigationTabBar;
+import timber.log.Timber;
 import ttc.project.fafun.FafunPagerAdapter;
 import ttc.project.fafun.FamilyFragment;
 import ttc.project.fafun.R;
+import ttc.project.fafun.TaskFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,13 +28,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initUI();
+        Timber.plant(new Timber.DebugTree());
     }
 
     private void initUI() {
         final ViewPager viewPager = (ViewPager) findViewById(R.id.vp_horizontal_ntb);
         FafunPagerAdapter adapter = new FafunPagerAdapter(this, getSupportFragmentManager());
         adapter.addFrag(new FamilyFragment(), "Fam");
-        adapter.addFrag(new FamilyFragment(), "Fam");
+        adapter.addFrag(new TaskFragment(), "Fam");
         adapter.addFrag(new FamilyFragment(), "Fam");
         adapter.addFrag(new FamilyFragment(), "Fam");
         viewPager.setAdapter(adapter);

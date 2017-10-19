@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    android:id="@+id/rootView"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout
+        android:layout_margin="10dp"
+        android:orientation="vertical"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="ttc.project.fafun.activity.AddTaskActivity">
+
+        <LinearLayout
+            android:padding="5dp"
+            android:background="@android:color/white"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:padding="5dp"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
+                android:text="Informasi Tugas"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <AutoCompleteTextView
+                    android:id="@+id/task_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Nama Tugas"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <AutoCompleteTextView
+                    android:id="@+id/task_point"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Nilai Point"
+                    android:inputType="number"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    />
+
+            </android.support.design.widget.TextInputLayout>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:padding="5dp"
+            android:layout_marginTop="10dp"
+            android:orientation="vertical"
+            android:background="@android:color/white"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:padding="5dp"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
+                android:text="Spesifikasi Tugas"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:padding="5dp"
+                android:textColor="@android:color/darker_gray"
+                android:text="Periode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <RadioGroup
+                    android:id="@+id/radio_group_period"
+                    android:layout_marginStart="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <RadioButton
+                        android:id="@+id/task_daily"
+                        android:text="Harian"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <RadioButton
+                        android:id="@+id/task_weekly"
+                        android:text="Mingguan"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <RadioButton
+                        android:id="@+id/task_monthly"
+                        android:text="Bulanan"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <RadioButton
+                        android:id="@+id/task_once"
+                        android:checked="true"
+                        android:text="Sekali"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </RadioGroup>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:text="Kategori"
+                android:textColor="@android:color/darker_gray"/>
+
+
+                <RadioGroup
+                    android:layout_marginStart="10dp"
+                    android:id="@+id/radio_group_category"
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent">
+                    <RadioButton
+                        android:checked="true"
+                        android:id="@+id/task_home"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Tugas Rumah"
+                        />
+                    <RadioButton
+
+                        android:id="@+id/task_academic"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Akademik"
+                        />
+                    <RadioButton
+                        android:id="@+id/task_accomplishment"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Pencapaian"
+                        />
+                    <RadioButton
+                        android:id="@+id/task_manner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Perilaku"
+                        />
+                    <RadioButton
+                        android:id="@+id/task_behaviour"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Kebiasaan"
+                        />
+                </RadioGroup>
+        </LinearLayout>
+    </LinearLayout>
+    </ScrollView>

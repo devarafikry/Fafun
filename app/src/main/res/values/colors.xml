@@ -8,4 +8,10 @@
     <color name="colorSecondaryText">#757575</color>
     <color name="icons">#212121</color>
     <color name="divider">#BDBDBD</color>
+
+    <color name="colorHome">#FF9800</color>
+    <color name="colorAcademic">#9E9D24</color>
+    <color name="colorAccomplishment">#FFEB3B</color>
+    <color name="colorManner">#CDDC39</color>
+    <color name="colorBehaviour">#E65100</color>
 </resources>

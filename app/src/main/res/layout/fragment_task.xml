@@ -1,39 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    android:orientation="vertical"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<FrameLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="ttc.project.fafun.activity.MainActivity">
-
-    <FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <LinearLayout
+        android:orientation="vertical"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="75dp"
-        android:background="@android:color/white">
+        android:layout_height="match_parent"
+        tools:context="ttc.project.fafun.activity.MainActivity">
 
-        <HorizontalScrollView
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <LinearLayout
-                android:orientation="horizontal"
-                android:padding="@dimen/horizontal_family_member_padding"
+            android:layout_height="75dp"
+            android:background="@android:color/white">
+
+            <android.support.v7.widget.RecyclerView
+                android:layout_margin="5dp"
+                android:id="@+id/member_recyclerview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/btn_add_member"
-                    xmlns:app="http://schemas.android.com/apk/res-auto"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/ic_plus"
-                    android:visibility="visible"
-                    app:civ_border_color="#ffffff"
-                    app:civ_border_width="2dp"/>
 
-            </LinearLayout>
-        </HorizontalScrollView>
+            </android.support.v7.widget.RecyclerView>
+        </FrameLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:background="@android:color/white"
+            android:layout_margin="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                tools:text="Tugas Ini"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                android:textColor="@android:color/darker_gray"
+                android:id="@+id/member_task_name"
+                android:layout_width="match_parent"
+                android:layout_marginBottom="10dp"
+                android:layout_height="wrap_content"/>
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/task_recyclerview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
+        </LinearLayout>
+
+    </LinearLayout>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/add_task"
+        app:fabSize="normal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="10dp"
+        android:src="@drawable/ic_plus_white" />
     </FrameLayout>
-
-</LinearLayout>

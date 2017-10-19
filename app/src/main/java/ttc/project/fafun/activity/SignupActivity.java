@@ -40,6 +40,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import ttc.project.fafun.R;
 import ttc.project.fafun.model.Family;
+import ttc.project.fafun.model.FamilyMember;
 import ttc.project.fafun.model.User;
 
 /**
@@ -55,6 +56,8 @@ public class SignupActivity extends AppCompatActivity {
     Button btnSignup;
     @BindView(R.id.name)
     EditText name;
+    @BindView(R.id.age)
+    EditText age;
     @BindView(R.id.email)
     EditText email;
     @BindView(R.id.password)
@@ -66,16 +69,7 @@ public class SignupActivity extends AppCompatActivity {
     @BindView(R.id.back_icon)
     ImageView back_icon;
     FirebaseAuth auth = FirebaseAuth.getInstance();
-    /**
-     * A dummy authentication store containing known user names and passwords.
-     * TODO: remove after connecting to a real authentication system.
-     */
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "foo@example.com:hello", "bar@example.com:world"
-    };
-    /**
-     * Keep track of the login task to ensure we can cancel it if requested.
-     */
+
 
     // UI references.
     private AutoCompleteTextView mEmailView;
@@ -218,42 +212,46 @@ private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
         FirebaseAuth.getInstance().signInWithEmailAndPassword(email.getText().toString(),
                 password.getText().toString()).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
             @Override
-            public void onSuccess(AuthResult authResult) {
+            public void onSuccess(final AuthResult authResult) {
 
-                String family_id = UUID.randomUUID().toString();
-                User user = new User(
-                        name.getText().toString(),
+                final String family_id = UUID.randomUUID().toString();
+                final User user = new User(
                         email.getText().toString(),
                         family_id,
-                        FirebaseStorage.getInstance().getReference().child(getString(R.string.storage_avatar_link))
-                        .child("boy1.png").getPath(),
-                        getResources().getInteger(R.integer.family_admin_type),
-                        getResources().getInteger(R.integer.point_default_value),
-                        getResources().getInteger(R.integer.completed_task_default_value)
+                        getResources().getInteger(R.integer.family_admin_type)
                 );
                 Family family = new Family(family_id,name.getText().toString());
                 dbRef.child(getString(R.string.family_node)).child(family_id)
                 .setValue(family);
-                dbRef.child(getString(R.string.user_node)).child(authResult.getUser().getUid()).setValue(user).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Intent intent = new Intent(SignupActivity.this, MainActivity.class);
-                        startActivity(intent);
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        notifyUser(getString(R.string.error_signup));
-                    }
-                }).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-//                        prog.dismiss();
-                    }
-                });
 
+                String path = FirebaseStorage.getInstance().getReference().child(getString(R.string.storage_avatar_link))
+                        .child("boy1.png")
+                        .getPath();
+                FamilyMember familyMember = new FamilyMember(
+                        authResult.getUser().getUid(),
+                        family_id,
+                        name.getText().toString(),
+                        age.getText().toString(),
+                        getString(R.string.role_default),
+                        path,
+                        getResources().getInteger(R.integer.point_default_value),
+                        getResources().getInteger(R.integer.point_default_value),
+                        getResources().getInteger(R.integer.completed_task_default_value)
+                );
+                dbRef.child(getResources().getString(R.string.family_member))
+                        .child(family_id).child(authResult.getUser().getUid())
+                        .setValue(familyMember);
+
+                dbRef.child(getString(R.string.user_node)).child(authResult.getUser().getUid()).setValue(user);
             }
-        }).addOnFailureListener(new OnFailureListener() {
+        }).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+            @Override
+            public void onSuccess(AuthResult authResult) {
+                Intent intent = new Intent(SignupActivity.this, MainActivity.class);
+                startActivity(intent);
+            }
+        })
+                .addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
 
