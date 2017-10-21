@@ -20,14 +20,16 @@
                     android:layout_gravity="center"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
+
                 <TextView
                     android:id="@+id/task_name"
-                    android:layout_gravity="center_vertical"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-                    tools:text="Menjadi Keren"
                     android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
                     android:layout_weight="5"
-                    android:layout_height="wrap_content"/>\
+                    android:textColor="@android:color/black"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    tools:text="Menjadi Keren"/>\
                 <TextView
                     android:id="@+id/task_reward"
                     android:padding="5dp"

@@ -4,4 +4,9 @@
     <integer name="family_regular_type">1</integer>
     <integer name="point_default_value">0</integer>
     <integer name="completed_task_default_value">0</integer>
+
+    <integer name="period_daily">0</integer>
+    <integer name="period_weekly">1</integer>
+    <integer name="period_monthly">2</integer>
+    <integer name="period_once">3</integer>
 </resources>

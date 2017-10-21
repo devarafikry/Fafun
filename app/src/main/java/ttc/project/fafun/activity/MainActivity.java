@@ -1,34 +1,68 @@
 package ttc.project.fafun.activity;
 
-import android.graphics.Color;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
+
+import com.firebase.jobdispatcher.Constraint;
+import com.firebase.jobdispatcher.FirebaseJobDispatcher;
+import com.firebase.jobdispatcher.GooglePlayDriver;
+import com.firebase.jobdispatcher.Job;
+import com.firebase.jobdispatcher.Lifetime;
+import com.firebase.jobdispatcher.RetryStrategy;
+import com.firebase.jobdispatcher.Trigger;
 
 import java.util.ArrayList;
 
 import devlight.io.library.ntb.NavigationTabBar;
 import timber.log.Timber;
-import ttc.project.fafun.FafunPagerAdapter;
-import ttc.project.fafun.FamilyFragment;
+import ttc.project.fafun.service.DailyCleanupJobService;
+import ttc.project.fafun.adapter.FafunPagerAdapter;
+import ttc.project.fafun.fragment.FamilyFragment;
 import ttc.project.fafun.R;
-import ttc.project.fafun.TaskFragment;
+import ttc.project.fafun.fragment.TaskFragment;
 
 public class MainActivity extends AppCompatActivity {
 
+    int DAILY_INTERVAL_CHECK = 3600;
+    //cek setiap 1 jam
+    int DAILY_INTERVAL_FLEXTIME = 30;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initUI();
         Timber.plant(new Timber.DebugTree());
+
+        FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(this));
+        //creating new job and adding it with dispatcher
+        Job job = createJob(dispatcher);
+        dispatcher.mustSchedule(job);
+    }
+
+    private Job createJob(FirebaseJobDispatcher dispatcher){
+        Job job = dispatcher.newJobBuilder()
+                //persist the task across boots
+                .setLifetime(Lifetime.FOREVER)
+                //.setLifetime(Lifetime.UNTIL_NEXT_BOOT)
+                //call this service when the criteria are met.
+                .setService(DailyCleanupJobService.class)
+                //unique id of the task
+                .setTag("UniqueTagForYourJob")
+                //don't overwrite an existing job with the same tag
+                .setReplaceCurrent(false)
+                // We are mentioning that the job is periodic.
+                .setRecurring(true)
+                // Run between 30 - 60 seconds from now.
+                .setTrigger(Trigger.executionWindow(DAILY_INTERVAL_CHECK, DAILY_INTERVAL_CHECK+DAILY_INTERVAL_FLEXTIME))
+                // retry with exponential backoff
+                .setRetryStrategy(RetryStrategy.DEFAULT_LINEAR)
+                //.setRetryStrategy(RetryStrategy.DEFAULT_EXPONENTIAL)
+                //Run this job only when the network is available.
+                .setConstraints(Constraint.ON_ANY_NETWORK)
+                .build();
+        return job;
     }
 
     private void initUI() {

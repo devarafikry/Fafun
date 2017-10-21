@@ -6,14 +6,19 @@ package ttc.project.fafun.model;
 
 public class Task {
     String task_name;
+    Long last_checked_timemillis;
+    boolean completed;
     int period;
     int task_reward_point;
-    int category;
+//    int category;
 
-    public Task(String task_name, int period, int task_reward_point, int category) {
+    public Task(String task_name, Long last_checked_timemillis, boolean completed, int period, int task_reward_point) {
         this.task_name = task_name;
+        this.last_checked_timemillis = last_checked_timemillis;
+        this.completed = completed;
+        this.period = period;
         this.task_reward_point = task_reward_point;
-        this.category = category;
+//        this.category = category;
     }
 
     public Task(){
@@ -26,6 +31,22 @@ public class Task {
 
     public void setTask_name(String task_name) {
         this.task_name = task_name;
+    }
+
+    public Long getLast_checked_timemillis() {
+        return last_checked_timemillis;
+    }
+
+    public void setLast_checked_timemillis(Long last_checked_timemillis) {
+        this.last_checked_timemillis = last_checked_timemillis;
+    }
+
+    public boolean isCompleted() {
+        return completed;
+    }
+
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
     }
 
     public int getPeriod() {
@@ -44,11 +65,11 @@ public class Task {
         this.task_reward_point = task_reward_point;
     }
 
-    public int getCategory() {
-        return category;
-    }
-
-    public void setCategory(int category) {
-        this.category = category;
-    }
+//    public int getCategory() {
+//        return category;
+//    }
+//
+//    public void setCategory(int category) {
+//        this.category = category;
+//    }
 }

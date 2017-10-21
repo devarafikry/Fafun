@@ -25,6 +25,7 @@
         </activity>
         <activity android:name=".activity.AddTaskActivity">
         </activity>
+        <service android:name=".service.DailyCleanupJobService"/>
     </application>
 
 </manifest>

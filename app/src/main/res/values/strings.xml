@@ -7,6 +7,10 @@
     <string name="family_member">family_members</string>
     <string name="storage_avatar_link">default_avatar</string>
     <string name="task_node">tasks</string>
+    <string name="completed_node">completed</string>
+    <string name="user_point_node">user_point</string>
+    <string name="user_point_lifetime_node">user_point_lifetime</string>
+    <string name="task_completed">task_completed</string>
 
     <string name="signup_to_login">Already have an account? Log in now!</string>
     <string name="login_to_signup">Don\'t have an account? Register now!</string>
