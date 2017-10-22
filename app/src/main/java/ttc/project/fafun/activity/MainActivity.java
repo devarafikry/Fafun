@@ -17,6 +17,8 @@ import java.util.ArrayList;
 
 import devlight.io.library.ntb.NavigationTabBar;
 import timber.log.Timber;
+import ttc.project.fafun.fragment.RankingFragment;
+import ttc.project.fafun.fragment.RewardFragment;
 import ttc.project.fafun.service.DailyCleanupJobService;
 import ttc.project.fafun.adapter.FafunPagerAdapter;
 import ttc.project.fafun.fragment.FamilyFragment;
@@ -32,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        getSupportActionBar().setTitle("Tugas");
         initUI();
         Timber.plant(new Timber.DebugTree());
 
@@ -70,8 +73,8 @@ public class MainActivity extends AppCompatActivity {
         FafunPagerAdapter adapter = new FafunPagerAdapter(this, getSupportFragmentManager());
         adapter.addFrag(new FamilyFragment(), "Fam");
         adapter.addFrag(new TaskFragment(), "Fam");
-        adapter.addFrag(new FamilyFragment(), "Fam");
-        adapter.addFrag(new FamilyFragment(), "Fam");
+        adapter.addFrag(new RankingFragment(), "Fam");
+        adapter.addFrag(new RewardFragment(), "Fam");
         viewPager.setAdapter(adapter);
 
         final String[] colors = getResources().getStringArray(R.array.default_preview);
@@ -126,6 +129,20 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onPageSelected(final int position) {
                 navigationTabBar.getModels().get(position).hideBadge();
+                switch (position){
+                    case 0:
+                        getSupportActionBar().setTitle("Keluarga");
+                        break;
+                    case 1:
+                        getSupportActionBar().setTitle("Tugas");
+                        break;
+                    case 2:
+                        getSupportActionBar().setTitle("Peringkat");
+                        break;
+                    case 3:
+                        getSupportActionBar().setTitle("Hadiah");
+                        break;
+                }
             }
 
             @Override

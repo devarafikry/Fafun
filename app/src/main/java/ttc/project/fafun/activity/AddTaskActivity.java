@@ -1,6 +1,8 @@
 package ttc.project.fafun.activity;
 
+import android.content.DialogInterface;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -11,6 +13,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -77,7 +80,7 @@ public class AddTaskActivity extends AppCompatActivity {
         if(item.getItemId() == R.id.action_save){
             submitTask();
         }
-        return true;
+        return super.onOptionsItemSelected(item);
     }
 
     private void submitTask(){
@@ -87,24 +90,46 @@ public class AddTaskActivity extends AppCompatActivity {
             return;
         }
 
-        String name = task_name.getText().toString();
-        int point = Integer.valueOf(task_point.getText().toString());
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Masukkan tugas "+task_name.getText().toString()+
+                " ?")
+                .setPositiveButton("Ya", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        String name = task_name.getText().toString();
+                        int point = Integer.valueOf(task_point.getText().toString());
 
 //        int selectedCategory = rbg_category.indexOfChild(findViewById(rbg_category.getCheckedRadioButtonId()));
-        int selectedPeriod = rbg_period.indexOfChild(findViewById(rbg_period.getCheckedRadioButtonId()));
+                        int selectedPeriod = rbg_period.indexOfChild(findViewById(rbg_period.getCheckedRadioButtonId()));
 
-        long time = System.currentTimeMillis();
-        Task task = new Task(
-                name,
-                time,
-                false,
-                selectedPeriod,
-                point
+                        long time = System.currentTimeMillis();
+                        Task task = new Task(
+                                name,
+                                time,
+                                false,
+                                selectedPeriod,
+                                point
 //                selectedCategory
-        );
-        dbRef.child(getString(R.string.task_node))
-                .child(selectedUserId)
-                .push()
-                .setValue(task);
+                        );
+                        dbRef.child(getString(R.string.task_node))
+                                .child(selectedUserId)
+                                .push()
+                                .setValue(task)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                finish();
+                            }
+                        });
+                    }
+                })
+                .setNegativeButton("Batal", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User cancelled the dialog
+                    }
+                });
+        // Create the AlertDialog object and return it
+        builder.create().show();
+
+
     }
 }

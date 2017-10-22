@@ -3,12 +3,15 @@ package ttc.project.fafun.fragment;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,6 +21,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -33,15 +37,23 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
+import ttc.project.fafun.helper.SnackbarUtils;
 import ttc.project.fafun.holder.MemberListHolder;
 import ttc.project.fafun.helper.PeriodHelper;
 import ttc.project.fafun.R;
 import ttc.project.fafun.holder.TaskHolder;
 import ttc.project.fafun.activity.AddTaskActivity;
+import ttc.project.fafun.model.Family;
 import ttc.project.fafun.model.FamilyMember;
+import ttc.project.fafun.model.RequestedReward;
 import ttc.project.fafun.model.Task;
 import ttc.project.fafun.model.User;
 
@@ -58,11 +70,16 @@ public class TaskFragment extends Fragment {
     @BindView(R.id.add_task)
     FloatingActionButton fab_add_task;
     @BindView(R.id.task_recyclerview) RecyclerView task_recyclerview;
-
+    @BindView(R.id.rootView) View rootView;
+    @BindView(R.id.framelayout_member)
+    FrameLayout framelayout_member;
+    @BindView(R.id.task_date) TextView task_date;
     FirebaseRecyclerAdapter fireAdapter;
 
     DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
     StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+
+    Snackbar s;
 
     public TaskFragment() {
         // Required empty public constructor
@@ -75,6 +92,14 @@ public class TaskFragment extends Fragment {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_task, container, false);
         ButterKnife.bind(this, view);
+
+        Configuration mConfiguration = new Configuration();
+        Settings.System.getConfiguration(getActivity().getContentResolver(), mConfiguration);
+        final TimeZone mTimeZone = Calendar.getInstance(mConfiguration.locale).getTimeZone();
+        SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat("MMM dd, yyyy HH:mm a");
+        mSimpleDateFormat.setTimeZone(mTimeZone);
+        String dateText = mSimpleDateFormat.format(new Date());
+        task_date.setText(dateText);
         fab_add_task.setVisibility(View.INVISIBLE);
         Timber.d("Path :"+ dbRef.child(getString(R.string.user_node)).child(
                 FirebaseAuth.getInstance().getCurrentUser().getUid()
@@ -88,7 +113,14 @@ public class TaskFragment extends Fragment {
                         final User user = dataSnapshot.getValue(User.class);
                         Query ref = dbRef.child(getString(R.string.family_member))
                                 .child(user.getFamily_id());
-
+                        if(user.getUser_type() ==
+                                getResources().getInteger(R.integer.family_admin_type)){
+                            framelayout_member.setVisibility(View.VISIBLE);
+                            fab_add_task.setVisibility(View.VISIBLE);
+                        } else{
+                            framelayout_member.setVisibility(View.GONE);
+                            fab_add_task.setVisibility(View.GONE);
+                        }
 
                         dbRef.child(getString(R.string.family_member))
                                 .child(user.getFamily_id())
@@ -117,6 +149,39 @@ public class TaskFragment extends Fragment {
                                                 viewHolder.task_category_label.setBackgroundColor(
                                                         getResources().getColor(PeriodHelper.getPeriodColor(model.getPeriod()))
                                                 );
+                                                if(user.getUser_type() == getResources().getInteger(R.integer.family_admin_type)){
+                                                    viewHolder.btn_task_delete.setVisibility(View.VISIBLE);
+                                                    viewHolder.btn_task_delete.setOnClickListener(new View.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(View view) {
+                                                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                                                            builder.setMessage("Hapus tugas "+model.getTask_name()+" ?")
+                                                                    .setPositiveButton("Ya", new DialogInterface.OnClickListener() {
+                                                                        public void onClick(DialogInterface dialog, int id) {
+                                                                            // FIRE ZE MISSILES!
+                                                                            getRef(position).removeValue();
+
+                                                                            SnackbarUtils.showSnackbar(
+                                                                                    rootView,
+                                                                                    s,
+                                                                                    "Tugas "+model.getTask_name()+" telah dihapus",
+                                                                                    Snackbar.LENGTH_LONG
+                                                                            );
+                                                                        }
+                                                                    })
+                                                                    .setNegativeButton("Tidak", new DialogInterface.OnClickListener() {
+                                                                        public void onClick(DialogInterface dialog, int id) {
+                                                                            // User cancelled the dialog
+                                                                            dialog.dismiss();
+                                                                        }
+                                                                    });
+                                                            // Create the AlertDialog object and return it
+                                                            builder.create().show();
+                                                        }
+                                                    });
+                                                } else{
+                                                    viewHolder.btn_task_delete.setVisibility(View.GONE);
+                                                }
 
                                                 if(model.isCompleted()){
                                                     viewHolder.task_checkbox.setChecked(model.isCompleted());
@@ -174,6 +239,26 @@ public class TaskFragment extends Fragment {
                                                                                 .child(user.getFamily_id())
                                                                                 .child(member.getUser_id())
                                                                                 .setValue(member);
+                                                                        dbRef.child(getString(R.string.family_node))
+                                                                                .child(member.getFamily_id())
+                                                                                .addListenerForSingleValueEvent(new ValueEventListener() {
+                                                                                    @Override
+                                                                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                                                                        Family family = dataSnapshot.getValue(Family.class);
+                                                                                        if(family.getHighestLifetimePoint()
+                                                                                                < member.getUser_point_lifetime()){
+                                                                                            family.setHighestLifetimePoint(
+                                                                                                    member.getUser_point_lifetime()
+                                                                                            );
+                                                                                            dataSnapshot.getRef().setValue(family);
+                                                                                        }
+                                                                                    }
+
+                                                                                    @Override
+                                                                                    public void onCancelled(DatabaseError databaseError) {
+
+                                                                                    }
+                                                                                });
                                                                     }
                                                                 })
                                                                 .setNegativeButton("Batal", new DialogInterface.OnClickListener() {
@@ -181,7 +266,13 @@ public class TaskFragment extends Fragment {
                                                                         // User cancelled the dialog
                                                                         viewHolder.task_checkbox.setChecked(false);
                                                                     }
-                                                                });
+                                                                })
+                                                        .setOnCancelListener(new DialogInterface.OnCancelListener() {
+                                                            @Override
+                                                            public void onCancel(DialogInterface dialogInterface) {
+                                                                viewHolder.task_checkbox.setChecked(false);
+                                                            }
+                                                        });
                                                         // Create the AlertDialog object and return it
                                                         builder.create().show();
                                                     }
@@ -191,7 +282,6 @@ public class TaskFragment extends Fragment {
                                         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
                                         task_recyclerview.setLayoutManager(linearLayoutManager);
                                         task_recyclerview.setAdapter(fireAdapter);
-                                        fab_add_task.setVisibility(View.VISIBLE);
 
                                         fab_add_task.setOnClickListener(new View.OnClickListener() {
                                             @Override
@@ -261,7 +351,39 @@ public class TaskFragment extends Fragment {
                                                 viewHolder.task_category_label.setBackgroundColor(
                                                         getResources().getColor(PeriodHelper.getPeriodColor(model.getPeriod()))
                                                 );
+                                                if(user.getUser_type() == getResources().getInteger(R.integer.family_admin_type)){
+                                                    viewHolder.btn_task_delete.setVisibility(View.VISIBLE);
+                                                    viewHolder.btn_task_delete.setOnClickListener(new View.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(View view) {
+                                                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                                                            builder.setMessage("Hapus tugas "+model.getTask_name()+" ?")
+                                                                    .setPositiveButton("Ya", new DialogInterface.OnClickListener() {
+                                                                        public void onClick(DialogInterface dialog, int id) {
+                                                                            // FIRE ZE MISSILES!
+                                                                            getRef(position).removeValue();
 
+                                                                            SnackbarUtils.showSnackbar(
+                                                                                    rootView,
+                                                                                    s,
+                                                                                    "Tugas "+model.getTask_name()+" telah dihapus",
+                                                                                    Snackbar.LENGTH_LONG
+                                                                            );
+                                                                        }
+                                                                    })
+                                                                    .setNegativeButton("Tidak", new DialogInterface.OnClickListener() {
+                                                                        public void onClick(DialogInterface dialog, int id) {
+                                                                            // User cancelled the dialog
+                                                                            dialog.dismiss();
+                                                                        }
+                                                                    });
+                                                            // Create the AlertDialog object and return it
+                                                            builder.create().show();
+                                                        }
+                                                    });
+                                                } else{
+                                                    viewHolder.btn_task_delete.setVisibility(View.GONE);
+                                                }
                                                 if(model.isCompleted()){
                                                     viewHolder.task_checkbox.setEnabled(false);
                                                     viewHolder.task_checkbox.setChecked(model.isCompleted());
@@ -272,6 +394,7 @@ public class TaskFragment extends Fragment {
                                                             viewHolder.task_name.getPaintFlags() |
                                                                     Paint.STRIKE_THRU_TEXT_FLAG);
                                                 } else{
+                                                    viewHolder.task_checkbox.setEnabled(true);
                                                     viewHolder.task_checkbox.setChecked(model.isCompleted());
                                                     viewHolder.task_name.setTextColor(
                                                             getResources().getColor(android.R.color.black)
@@ -292,7 +415,7 @@ public class TaskFragment extends Fragment {
                                                                     public void onClick(DialogInterface dialog, int id) {
                                                                         viewHolder.task_checkbox.setEnabled(false);
                                                                         dbRef.child(getString(R.string.task_node))
-                                                                                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                                                                .child(familyMember.getUser_id())
                                                                                 .child(getRef(viewHolder.getAdapterPosition()).getKey())
                                                                                 .child(getString(R.string.completed_node))
                                                                                 .setValue(viewHolder.task_checkbox.isChecked());
@@ -317,6 +440,27 @@ public class TaskFragment extends Fragment {
                                                                                 .child(user.getFamily_id())
                                                                                 .child(familyMember.getUser_id())
                                                                                 .setValue(familyMember);
+
+                                                                        dbRef.child(getString(R.string.family_node))
+                                                                                .child(familyMember.getFamily_id())
+                                                                                .addListenerForSingleValueEvent(new ValueEventListener() {
+                                                                                    @Override
+                                                                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                                                                        Family family = dataSnapshot.getValue(Family.class);
+                                                                                        if(family.getHighestLifetimePoint()
+                                                                                                < familyMember.getUser_point_lifetime()){
+                                                                                            family.setHighestLifetimePoint(
+                                                                                                    familyMember.getUser_point_lifetime()
+                                                                                            );
+                                                                                            dataSnapshot.getRef().setValue(family);
+                                                                                        }
+                                                                                    }
+
+                                                                                    @Override
+                                                                                    public void onCancelled(DatabaseError databaseError) {
+
+                                                                                    }
+                                                                                });
                                                                     }
                                                                 })
                                                                 .setNegativeButton("Batal", new DialogInterface.OnClickListener() {
@@ -324,7 +468,13 @@ public class TaskFragment extends Fragment {
                                                                         // User cancelled the dialog
                                                                         viewHolder.task_checkbox.setChecked(false);
                                                                     }
-                                                                });
+                                                                })
+                                                        .setOnCancelListener(new DialogInterface.OnCancelListener() {
+                                                            @Override
+                                                            public void onCancel(DialogInterface dialogInterface) {
+                                                                viewHolder.task_checkbox.setChecked(false);
+                                                            }
+                                                        });
                                                         // Create the AlertDialog object and return it
                                                         builder.create().show();
                                                     }

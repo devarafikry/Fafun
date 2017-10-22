@@ -14,24 +14,24 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center_horizontal"
-            android:src="@drawable/pgbg"
+            android:background="@color/colorPrimary"
             android:scaleType="centerCrop"/>
 
 
-        <FrameLayout
-            android:alpha="0.5"
-            android:background="@color/colorAccent"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+        <!--<FrameLayout-->
+            <!--android:alpha="0.5"-->
+            <!--android:background="@color/colorAccent"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent">-->
 
-        </FrameLayout>
+        <!--</FrameLayout>-->
 
 
         <ImageView
             android:layout_width="@dimen/logo_size"
             android:layout_height="@dimen/logo_size"
             android:layout_gravity="center_horizontal"
-            android:src="@drawable/tobagologo" />
+            android:src="@drawable/fafun" />
         <ProgressBar
             android:id="@+id/login_progress"
             style="?android:attr/progressBarStyleLarge"
@@ -51,6 +51,7 @@
                 android:layout_height="match_parent">
 
                 <android.support.v7.widget.CardView
+                    android:backgroundTint="@android:color/white"
                     app:cardCornerRadius="4dp"
                     android:layout_margin="@dimen/login_card_margin"
                     android:layout_width="match_parent"
@@ -75,6 +76,7 @@
 
                             <AutoCompleteTextView
                                 android:id="@+id/email"
+                                android:textColor="@color/colorPrimary"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:hint="@string/prompt_email"
@@ -92,6 +94,7 @@
 
                             <EditText
                                 android:id="@+id/password"
+                                android:textColor="@color/colorPrimary"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:hint="@string/prompt_password"
@@ -118,7 +121,7 @@
                         <TextView
                             android:layout_marginTop="@dimen/login_card_margin"
                             android:id="@+id/to_signup"
-                            android:textColor="@color/colorAccent"
+                            android:textColor="@color/colorPrimary"
                             android:gravity="center"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"

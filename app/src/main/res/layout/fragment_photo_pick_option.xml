@@ -1,0 +1,49 @@
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <LinearLayout
+            android:padding="@dimen/select_action_padding"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_gravity="center"
+                android:id="@+id/take_photo"
+                android:layout_width="@dimen/take_photo_size"
+                android:layout_height="@dimen/take_photo_size"
+                android:src="@drawable/ic_take_photo"/>
+            <TextView
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Kamera"/>
+        </LinearLayout>
+
+    <LinearLayout
+        android:padding="@dimen/select_action_padding"
+        android:orientation="vertical"
+        android:layout_weight="1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:layout_gravity="center"
+            android:id="@+id/pick_photo"
+            android:layout_width="@dimen/pick_photo_size"
+            android:layout_height="@dimen/pick_photo_size"
+            android:src="@drawable/ic_pick_photo"/>
+        <TextView
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Galeri"/>
+    </LinearLayout>
+
+    </LinearLayout>
+

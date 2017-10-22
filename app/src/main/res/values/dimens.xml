@@ -7,4 +7,8 @@
     <dimen name="back_size">50dp</dimen>
 
     <dimen name="horizontal_family_member_padding">5dp</dimen>
+
+    <dimen name="pick_photo_size">50dp</dimen>
+    <dimen name="take_photo_size">50dp</dimen>
+    <dimen name="select_action_padding">50dp</dimen>
 </resources>

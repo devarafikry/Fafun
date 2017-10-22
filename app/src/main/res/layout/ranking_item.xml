@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="horizontal"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content">
+
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/member_avatar"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_gravity="center"
+                    android:padding="10dp"
+                    app:civ_border_color="@color/colorAccent"
+                    app:civ_border_width="2dp"
+                    tools:src="@drawable/boy1"/>
+                <TextView
+                    android:id="@+id/member_name"
+                    android:gravity="center"
+                    tools:text="Nama"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+        </LinearLayout>
+        <View
+            android:id="@+id/member_point_bar"
+            android:layout_gravity="center_vertical"
+            android:background="@color/colorPrimary"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="25dp"/>
+        <TextView
+            android:id="@+id/member_point_text"
+            android:layout_width="0dp"
+            android:layout_weight="3"
+            android:padding="5dp"
+            android:gravity="center_vertical"
+            tools:text="100 pts"
+            android:layout_height="match_parent"/>
+</LinearLayout>

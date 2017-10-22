@@ -6,14 +6,16 @@ package ttc.project.fafun.model;
 
 public class Family {
     String famlity_id, family_name;
+    int highestLifetimePoint;
 
     public Family(){
 
     }
 
-    public Family(String famlity_id, String family_name) {
+    public Family(String famlity_id, String family_name, int highestLifetimePoint) {
         this.famlity_id = famlity_id;
         this.family_name = family_name;
+        this.highestLifetimePoint = highestLifetimePoint;
     }
 
     public String getFamlity_id() {
@@ -30,5 +32,13 @@ public class Family {
 
     public void setFamily_name(String family_name) {
         this.family_name = family_name;
+    }
+
+    public int getHighestLifetimePoint() {
+        return highestLifetimePoint;
+    }
+
+    public void setHighestLifetimePoint(int highestLifetimePoint) {
+        this.highestLifetimePoint = highestLifetimePoint;
     }
 }

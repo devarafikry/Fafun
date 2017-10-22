@@ -220,7 +220,7 @@ private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
                         family_id,
                         getResources().getInteger(R.integer.family_admin_type)
                 );
-                Family family = new Family(family_id,name.getText().toString());
+                Family family = new Family(family_id,name.getText().toString(),0);
                 dbRef.child(getString(R.string.family_node)).child(family_id)
                 .setValue(family);
 

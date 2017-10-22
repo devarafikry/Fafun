@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="ttc.project.fafun">
 
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -9,23 +11,45 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.example.android.fileprovider.fafun"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"/>
+        </provider>
+
         <activity android:name=".activity.MainActivity">
         </activity>
-        <activity android:name=".activity.LoginActivity">
+        <activity android:name=".activity.LoginActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".activity.SignupActivity"/>
+        <activity android:name=".activity.SignupActivity"
+                  android:theme="@style/Theme.AppCompat.NoActionBar"/>
         <activity android:name=".activity.FamilyActivity">
         </activity>
-        <activity android:name=".activity.AddFamilyMemberActivity">
+        <activity android:name=".activity.AddFamilyMemberActivity"
+            android:parentActivityName=".activity.MainActivity">
         </activity>
-        <activity android:name=".activity.AddTaskActivity">
+        <activity android:name=".activity.AddTaskActivity"
+            android:parentActivityName=".activity.MainActivity">
         </activity>
+
         <service android:name=".service.DailyCleanupJobService"/>
+
+        <activity android:name=".activity.AddRewardActivity"
+            android:parentActivityName=".activity.MainActivity">
+        </activity>
+        <activity android:name=".activity.NotificationActivity"
+            android:parentActivityName=".activity.MainActivity">
+        </activity>
     </application>
 
 </manifest>

@@ -6,14 +6,19 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -30,9 +35,12 @@ import com.google.firebase.storage.StorageReference;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import ttc.project.fafun.activity.LoginActivity;
+import ttc.project.fafun.activity.NotificationActivity;
 import ttc.project.fafun.holder.FamilyMemberHolder;
 import ttc.project.fafun.R;
 import ttc.project.fafun.activity.AddFamilyMemberActivity;
+import ttc.project.fafun.model.Family;
 import ttc.project.fafun.model.FamilyMember;
 import ttc.project.fafun.model.User;
 
@@ -46,6 +54,8 @@ public class FamilyFragment extends Fragment {
     FloatingActionButton btn_add_family;
     @BindView(R.id.family_recyclerview)
     RecyclerView family_recyclerview;
+    @BindView(R.id.family_name)
+    TextView family_name;
 
     DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
     StorageReference storageRef = FirebaseStorage.getInstance().getReference();
@@ -53,6 +63,28 @@ public class FamilyFragment extends Fragment {
         // Required empty public constructor
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        getActivity().getMenuInflater().inflate(R.menu.menu_family, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.action_logout){
+            FirebaseAuth.getInstance().signOut();
+            Intent intent = new Intent(getActivity(), LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+            startActivity(intent);
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -67,6 +99,7 @@ public class FamilyFragment extends Fragment {
                 startActivity(intent);
             }
         });
+
         dbRef.child(getString(R.string.user_node))
                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                 .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -75,7 +108,26 @@ public class FamilyFragment extends Fragment {
                         User user = dataSnapshot.getValue(User.class);
                         Query ref = dbRef.child(getString(R.string.family_member))
                                 .child(user.getFamily_id());
+                        if(user.getUser_type() ==
+                                getResources().getInteger(R.integer.family_admin_type)){
+                            btn_add_family.setVisibility(View.VISIBLE);
+                        } else{
+                            btn_add_family.setVisibility(View.GONE);
+                        }
+                        dbRef.child(getString(R.string.family_node))
+                                .child(user.getFamily_id())
+                                .addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        Family family = dataSnapshot.getValue(Family.class);
+                                        family_name.setText(family.getFamily_name().substring(family.getFamily_name().lastIndexOf(" ")+1)+" Family");
+                                    }
 
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
                         FirebaseRecyclerAdapter fireAdapter = new FirebaseRecyclerAdapter<FamilyMember, FamilyMemberHolder>(
                                 FamilyMember.class,
                                 R.layout.family_member_item,

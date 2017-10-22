@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
+    android:id="@+id/rootView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -14,6 +15,7 @@
         tools:context="ttc.project.fafun.activity.MainActivity">
 
         <FrameLayout
+            android:id="@+id/framelayout_member"
             android:layout_width="match_parent"
             android:layout_height="75dp"
             android:background="@android:color/white">
@@ -41,6 +43,13 @@
                 android:layout_width="match_parent"
                 android:layout_marginBottom="10dp"
                 android:layout_height="wrap_content"/>
+            <TextView
+                tools:text="12 September 2017"
+                android:textColor="@android:color/darker_gray"
+                android:id="@+id/task_date"
+                android:layout_width="match_parent"
+                android:layout_marginBottom="10dp"
+                android:layout_height="wrap_content"/>
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/task_recyclerview"
                 android:layout_width="match_parent"
@@ -48,12 +57,13 @@
         </LinearLayout>
 
     </LinearLayout>
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/add_task"
-        app:fabSize="normal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="10dp"
-        android:src="@drawable/ic_plus_white" />
-    </FrameLayout>
+        android:src="@drawable/ic_plus_white"
+        app:fabSize="normal"/>
+</FrameLayout>
