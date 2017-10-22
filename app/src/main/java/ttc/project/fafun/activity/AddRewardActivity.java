@@ -26,10 +26,12 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -179,23 +181,28 @@ public class AddRewardActivity extends AppCompatActivity {
         int selected_action = constant;
         if(selected_action<999){
             if(selected_action == TAKE_PHOTO_CONSTANT){
-                Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                if (takePicture.resolveActivity(getPackageManager()) != null) {
-                    // Create the File where the photo should go
-                    File photoFile = null;
-                    try {
-                        photoFile = createImageFile();
-                    } catch (IOException ex) {
-                        // Error occurred while creating the File
+                try {
+                    Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    if (takePicture.resolveActivity(getPackageManager()) != null) {
+                        // Create the File where the photo should go
+                        File photoFile = null;
+                        try {
+                            photoFile = createImageFile();
+                        } catch (IOException ex) {
+                            // Error occurred while creating the File
+                        }
+                        // Continue only if the File was successfully created
+                        if (photoFile != null) {
+                            photoURI = FileProvider.getUriForFile(this,
+                                    "com.example.android.fileprovider.fafun",
+                                    photoFile);
+                            takePicture.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                            startActivityForResult(takePicture, TAKE_PHOTO_CONSTANT);
+                        }
                     }
-                    // Continue only if the File was successfully created
-                    if (photoFile != null) {
-                        photoURI = FileProvider.getUriForFile(this,
-                                "com.example.android.fileprovider.fafun",
-                                photoFile);
-                        takePicture.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                        startActivityForResult(takePicture, TAKE_PHOTO_CONSTANT);
-                    }
+                } catch (Exception e){
+                    Toast.makeText(this, getString(R.string.kesalahan_gagal, "membuka kamera, periksa kamera anda, atau ambil gambar dari galery"), Toast.LENGTH_LONG).show();
+                    FirebaseCrash.report(e);
                 }
             } else if(selected_action == PICK_PHOTO_CONSTANT){
                 Intent pickPhoto = new Intent(Intent.ACTION_PICK,
@@ -250,6 +257,7 @@ public class AddRewardActivity extends AppCompatActivity {
     private void requestPermission(String permission, int permission_constant){
         if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                 permission)) {
+
         } else {
             ActivityCompat.requestPermissions(this,
                     new String[]{permission},

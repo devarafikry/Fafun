@@ -11,4 +11,9 @@
     <dimen name="pick_photo_size">50dp</dimen>
     <dimen name="take_photo_size">50dp</dimen>
     <dimen name="select_action_padding">50dp</dimen>
+
+    <dimen name="progress_bar_shop_image_size">42dp</dimen>
+    <dimen name="uploading_fragment_padding">25dp</dimen>
+    <dimen name="uploading_fragment_content_padding">5dp</dimen>
+
 </resources>

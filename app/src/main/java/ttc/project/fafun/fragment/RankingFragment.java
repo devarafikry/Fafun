@@ -20,6 +20,7 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -107,12 +108,16 @@ public class RankingFragment extends Fragment {
 
                                                 viewHolder.member_point_text.setText(familyMember.getUser_point_lifetime()+" pts");
                                                 viewHolder.member_name.setText(familyMember.getName());
-                                                int memberPoint = familyMember.getUser_point_lifetime();
-                                                int weight = (memberPoint  * 10)/highestLifetimePoint;
-                                                LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(0,75);
-                                                param.gravity = Gravity.CENTER_VERTICAL;
-                                                param.weight = weight;
-                                                viewHolder.member_point_bar.setLayoutParams(param);
+                                                try {
+                                                    int memberPoint = familyMember.getUser_point_lifetime();
+                                                    int weight = (memberPoint  * 10)/highestLifetimePoint;
+                                                    LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(0,75);
+                                                    param.gravity = Gravity.CENTER_VERTICAL;
+                                                    param.weight = weight;
+                                                    viewHolder.member_point_bar.setLayoutParams(param);
+                                                } catch (Exception e){
+                                                    FirebaseCrash.report(e);
+                                                }
                                             }
                                         };
                                         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());

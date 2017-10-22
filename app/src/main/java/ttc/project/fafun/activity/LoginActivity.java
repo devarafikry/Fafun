@@ -2,6 +2,7 @@ package ttc.project.fafun.activity;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -38,6 +39,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import ttc.project.fafun.R;
+import ttc.project.fafun.fragment.UploadingDataFragment;
 
 /**
  * A login screen that offers login via email/password.
@@ -318,11 +320,18 @@ public class LoginActivity extends AppCompatActivity {
         return password.length() > 4;
     }
 
+    final DialogFragment uploadingDataFragmet = new UploadingDataFragment();
+
     /**
      * Shows the progress UI and hides the login form.
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
     private void showProgress(final boolean show) {
+        if (show) {
+            uploadingDataFragmet.show(getFragmentManager(), "loading");
+        } else {
+            uploadingDataFragmet.dismiss();
+        }
         // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
         // for very easy animations. If available, use these APIs to fade-in
         // the progress spinner.

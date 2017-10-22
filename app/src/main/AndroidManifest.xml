@@ -6,9 +6,9 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_launcher_no_shape"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <provider
@@ -33,8 +33,6 @@
         </activity>
         <activity android:name=".activity.SignupActivity"
                   android:theme="@style/Theme.AppCompat.NoActionBar"/>
-        <activity android:name=".activity.FamilyActivity">
-        </activity>
         <activity android:name=".activity.AddFamilyMemberActivity"
             android:parentActivityName=".activity.MainActivity">
         </activity>
